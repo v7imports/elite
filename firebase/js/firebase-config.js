@@ -1,3 +1,5 @@
+console.log(">>> firebase-config.js FOI CARREGADO <<<");
+
 const firebaseConfig = {
   apiKey: "AIzaSyDHXK2yV8ZliQCYU3LSGnmJmWe2gZ-8IMc",
   authDomain: "v7imports.firebaseapp.com",
@@ -7,14 +9,14 @@ const firebaseConfig = {
   appId: "1:313801918256:web:7362aa27dbcad009ba2af5"
 };
 
-// Inicializa o Firebase
+console.log("Firebase disponível:", typeof firebase);
+
 firebase.initializeApp(firebaseConfig);
 
-// Serviços do Firebase
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+console.log("Firebase inicializado:", firebase);
 
-console.log("Firebase inicializado!");
-console.log("Auth:", auth);
-console.log("Firestore:", db);
+window.auth = firebase.auth();
+window.db = firebase.firestore();
+
+console.log("AUTH CRIADO:", window.auth);
+console.log("DB CRIADO:", window.db);

@@ -1,4 +1,3 @@
-// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDHXK2yV8ZliQCYU3LSGnmJmWe2gZ-8IMc",
   authDomain: "v7imports.firebaseapp.com",
@@ -11,7 +10,11 @@ const firebaseConfig = {
 // Inicializa o Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Cria os serviços que o projeto utiliza
+// Serviços do Firebase
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
+
+console.log("Firebase inicializado!");
+console.log("Auth:", auth);
+console.log("Firestore:", db);

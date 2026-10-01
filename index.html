@@ -1,105 +1,1080 @@
-
 <!DOCTYPE html>
-
 <html lang="pt-BR">
+
 <head>
-<meta charset="utf-8"/>
-<title>Loja Online - Corrigido</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase-config.js"></script>
-<script defer="" src="js/main.js"></script>
-<style>
-.card {
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-</style></head>
-<body class="bg-light">
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-<div class="container d-flex justify-content-between align-items-center">
-<a class="navbar-brand" href="https://professorjacksonmarques.github.io/firebase/index.html">🛍️ Loja Online</a>
-<div>
-<button class="btn btn-outline-secondary me-2 d-none" id="btn-admin" onclick="window.location.href='admin.html'">Admin</button>
-<button class="btn btn-outline-primary me-2" id="btn-login" onclick="abrirLogin()">Entrar</button>
-<button class="btn btn-outline-secondary d-none" id="btn-logout" onclick="logout()">Sair</button>
-</div>
-</div>
-</nav>
-<!-- Modo escuro -->
-<div class="form-check form-switch text-end me-3 mt-2">
-<input class="form-check-input" id="modoEscuroToggle" onchange="alternarModoEscuro()" type="checkbox"/>
-<label class="form-check-label" for="modoEscuroToggle">Modo escuro</label>
-</div>
-<script>
-    function alternarModoEscuro() {
-      document.body.classList.toggle('bg-dark');
-      document.body.classList.toggle('text-light');
-      document.querySelectorAll('.card').forEach(card => card.classList.toggle('bg-secondary'));
-    }
-  </script>
-<div class="container mt-4">
-<!-- Filtros -->
-<div class="row mb-4">
-<div class="col-md-4">
-<input class="form-control" id="busca" placeholder="Buscar por nome" type="text"/>
-</div>
-<div class="col-md-3">
-<input class="form-control" id="precoMin" placeholder="Preço mínimo" type="number"/>
-</div>
-<div class="col-md-3">
-<input class="form-control" id="precoMax" placeholder="Preço máximo" type="number"/>
-</div>
-<div class="col-md-2">
-<button class="btn btn-primary w-100" onclick="aplicarFiltros()">Filtrar</button>
-</div>
-</div>
-<!-- Produtos -->
-<div class="row mb-5 row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="produtos"></div>
-<!-- Carrinho -->
-<h2 class="mt-5">🛒 Meu Carrinho</h2>
-<ul class="list-group mb-3" id="carrinho"></ul>
-<button class="btn btn-success mb-5" onclick="finalizarCompra()">Finalizar Compra</button>
-</div>
-<!-- Modal de login/cadastro -->
-<div class="modal fade" id="loginModal" tabindex="-1">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title">Acesso ao Sistema</h5>
-<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
-</div>
-<div class="modal-body">
-<input class="form-control mb-2" id="email" placeholder="Email" type="email"/>
-<input class="form-control mb-3" id="senha" placeholder="Senha" type="password"/>
-<button class="btn btn-primary w-100 mb-2" onclick="login()">Entrar</button>
-<hr/>
-<input class="form-control mb-2" id="emailCadastro" placeholder="Novo Email" type="email"/>
-<input class="form-control mb-2" id="senhaCadastro" placeholder="Nova Senha" type="password"/>
-<button class="btn btn-success w-100" onclick="cadastrar()">Cadastrar</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Scripts finais -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-      carregarProdutos();
-    });
-  </script>
-<!-- Rodapé -->
-<footer class="bg-dark text-light py-4 mt-5">
-<div class="container text-center">
-<p class="mb-1">© 2025 Loja Online - Todos os direitos reservados.</p>
-<p class="mb-0"><small>Desenvolvido com ♥ usando Firebase &amp; Bootstrap</small></p>
-</div>
-</footer>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>V7IMPORTS | Camisas de Futebol</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+    <!-- Configuração do Firebase -->
+    <script src="js/firebase-config.js"></script>
+
+    <!-- JavaScript principal -->
+    <script defer src="js/main.js"></script>
+
+    <style>
+
+        /* =====================================================
+           V7IMPORTS - IDENTIDADE
+        ===================================================== */
+
+        :root {
+            --vermelho: #e50914;
+            --vermelho-claro: #ff1a26;
+            --preto: #050505;
+            --preto-2: #0d0d0d;
+            --preto-3: #151515;
+            --cinza: #a8a8a8;
+            --branco: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f5f5;
+            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: 0.3s;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar-v7 {
+            background: rgba(5, 5, 5, 0.97) !important;
+            border-bottom: 1px solid rgba(229, 9, 20, 0.4);
+            min-height: 72px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand-v7 {
+            color: white !important;
+            font-size: 1.45rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .navbar-brand-v7 span {
+            color: var(--vermelho);
+        }
+
+        .nav-btn {
+            border-radius: 5px;
+            font-weight: 700;
+            padding: 9px 18px;
+            transition: 0.3s;
+        }
+
+        .btn-login-v7 {
+            color: white;
+            border: 1px solid var(--vermelho);
+            background: transparent;
+        }
+
+        .btn-login-v7:hover {
+            background: var(--vermelho);
+            color: white;
+        }
+
+        .btn-admin-v7 {
+            color: white;
+            background: var(--vermelho);
+            border: 1px solid var(--vermelho);
+        }
+
+        .btn-admin-v7:hover {
+            background: #b80710;
+            color: white;
+        }
+
+        .btn-logout-v7 {
+            color: white;
+            border: 1px solid #555;
+            background: transparent;
+        }
+
+        .btn-logout-v7:hover {
+            background: white;
+            color: black;
+        }
+
+
+        /* =====================================================
+           HERO / BANNER PRINCIPAL
+        ===================================================== */
+
+        .hero-v7 {
+            width: 100%;
+            background: #000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-v7 img {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-height: 430px;
+            max-height: 720px;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /*
+        Pequeno efeito escuro nas laterais para integrar
+        melhor o banner com o restante do site.
+        */
+
+        .hero-v7::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0.05),
+                    transparent 65%,
+                    rgba(0,0,0,0.65)
+                );
+        }
+
+
+        /* =====================================================
+           ÁREA DE CHAMADA
+        ===================================================== */
+
+        .chamada-v7 {
+            background: #080808;
+            color: white;
+            text-align: center;
+            padding: 45px 20px;
+            border-bottom: 3px solid var(--vermelho);
+        }
+
+        .chamada-v7 h2 {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            margin-bottom: 10px;
+        }
+
+        .chamada-v7 h2 span {
+            color: var(--vermelho);
+        }
+
+        .chamada-v7 p {
+            color: #aaa;
+            max-width: 700px;
+            margin: auto;
+            font-size: 1.05rem;
+        }
+
+
+        /* =====================================================
+           BENEFÍCIOS
+        ===================================================== */
+
+        .beneficios {
+            background: #111;
+            color: white;
+            padding: 45px 0;
+        }
+
+        .beneficio {
+            height: 100%;
+            background: #181818;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            padding: 28px 18px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .beneficio:hover {
+            transform: translateY(-6px);
+            border-color: var(--vermelho);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.15);
+        }
+
+        .beneficio-icon {
+            font-size: 2.4rem;
+            margin-bottom: 15px;
+        }
+
+        .beneficio h5 {
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .beneficio p {
+            color: #aaa;
+            margin-bottom: 0;
+            font-size: 0.92rem;
+        }
+
+
+        /* =====================================================
+           ÁREA DE PRODUTOS
+        ===================================================== */
+
+        .produtos-section {
+            background: #f5f5f5;
+            padding: 60px 0;
+        }
+
+        .titulo-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .titulo-section h2 {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 2.3rem;
+        }
+
+        .titulo-section h2 span {
+            color: var(--vermelho);
+        }
+
+        .titulo-section p {
+            color: #666;
+        }
+
+
+        /* =====================================================
+           FILTROS
+        ===================================================== */
+
+        .filtros-v7 {
+            background: white;
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .filtros-v7 label {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .filtros-v7 .form-control {
+            border-radius: 5px;
+            min-height: 45px;
+        }
+
+        .btn-filtrar {
+            background: var(--vermelho);
+            color: white;
+            border: none;
+            font-weight: 800;
+            min-height: 45px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn-filtrar:hover {
+            background: #b80710;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+
+        /* =====================================================
+           CARDS DOS PRODUTOS
+        ===================================================== */
+
+        #produtos .card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: 0.3s ease;
+            height: 100%;
+        }
+
+        #produtos .card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        #produtos .card img {
+            height: 300px;
+            width: 100%;
+            object-fit: contain;
+            background: #f4f4f4;
+            padding: 15px;
+        }
+
+        #produtos .card-body {
+            padding: 20px;
+        }
+
+        #produtos .card-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        #produtos .card-text {
+            color: #555;
+        }
+
+        #produtos .btn {
+            background: var(--vermelho);
+            border: none;
+            font-weight: 800;
+            padding: 11px;
+        }
+
+        #produtos .btn:hover {
+            background: #b80710;
+        }
+
+
+        /* =====================================================
+           CARRINHO
+        ===================================================== */
+
+        .carrinho-section {
+            background: #0b0b0b;
+            color: white;
+            padding: 55px 0;
+        }
+
+        .carrinho-section h2 {
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .carrinho-box {
+            background: #151515;
+            border: 1px solid #292929;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        #carrinho .list-group-item {
+            background: #202020;
+            color: white;
+            border-color: #333;
+        }
+
+        .btn-finalizar {
+            background: var(--vermelho);
+            border: none;
+            color: white;
+            font-weight: 800;
+            padding: 12px 25px;
+        }
+
+        .btn-finalizar:hover {
+            background: #b80710;
+            color: white;
+        }
+
+
+        /* =====================================================
+           MODAL DE LOGIN
+        ===================================================== */
+
+        .modal-content {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #080808;
+            color: white;
+            border-bottom: 2px solid var(--vermelho);
+        }
+
+        .modal-title {
+            font-weight: 800;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-body .form-control {
+            min-height: 46px;
+        }
+
+        .btn-login-modal {
+            background: var(--vermelho);
+            border: none;
+            color: white;
+            font-weight: 800;
+        }
+
+        .btn-login-modal:hover {
+            background: #b80710;
+            color: white;
+        }
+
+        .btn-cadastro-modal {
+            background: #111;
+            border: none;
+            color: white;
+            font-weight: 800;
+        }
+
+        .btn-cadastro-modal:hover {
+            background: var(--vermelho);
+            color: white;
+        }
+
+
+        /* =====================================================
+           MODO ESCURO
+        ===================================================== */
+
+        body.modo-escuro {
+            background: #050505;
+            color: white;
+        }
+
+        body.modo-escuro .produtos-section {
+            background: #080808;
+        }
+
+        body.modo-escuro .titulo-section p {
+            color: #aaa;
+        }
+
+        body.modo-escuro .filtros-v7 {
+            background: #151515;
+            border-color: #292929;
+        }
+
+        body.modo-escuro .filtros-v7 .form-control {
+            background: #222;
+            color: white;
+            border-color: #444;
+        }
+
+
+        /* =====================================================
+           RODAPÉ
+        ===================================================== */
+
+        .footer-v7 {
+            background: #030303;
+            color: white;
+            border-top: 2px solid var(--vermelho);
+            padding: 40px 0 25px;
+        }
+
+        .footer-logo {
+            font-size: 1.7rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-logo span {
+            color: var(--vermelho);
+        }
+
+        .footer-v7 p {
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVIDADE
+        ===================================================== */
+
+        @media (max-width: 768px) {
+
+            .navbar-v7 {
+                min-height: 65px;
+            }
+
+            .navbar-brand-v7 {
+                font-size: 1.15rem;
+            }
+
+            .hero-v7 img {
+                min-height: 300px;
+                object-fit: cover;
+            }
+
+            .chamada-v7 {
+                padding: 35px 15px;
+            }
+
+            .beneficios {
+                padding: 35px 10px;
+            }
+
+            .produtos-section {
+                padding: 40px 10px;
+            }
+
+            #produtos .card img {
+                height: 250px;
+            }
+
+            .nav-btn {
+                padding: 7px 10px;
+                font-size: 0.85rem;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <nav class="navbar navbar-expand-lg navbar-v7">
+
+        <div class="container">
+
+            <a class="navbar-brand navbar-brand-v7" href="index.html">
+                V7<span>IMPORTS</span>
+            </a>
+
+            <div class="d-flex align-items-center gap-2">
+
+                <button
+                    class="btn nav-btn btn-admin-v7 d-none"
+                    id="btn-admin"
+                    onclick="window.location.href='admin.html'"
+                >
+                    ADMIN
+                </button>
+
+                <button
+                    class="btn nav-btn btn-login-v7"
+                    id="btn-login"
+                    onclick="abrirLogin()"
+                >
+                    ENTRAR
+                </button>
+
+                <button
+                    class="btn nav-btn btn-logout-v7 d-none"
+                    id="btn-logout"
+                    onclick="logout()"
+                >
+                    SAIR
+                </button>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         BANNER PRINCIPAL V7IMPORTS
+    ====================================================== -->
+
+    <section class="hero-v7">
+
+        <img
+            src="img/v7imports-banner.png"
+            alt="V7IMPORTS - Camisas de Futebol"
+        >
+
+    </section>
+
+
+    <!-- =====================================================
+         CHAMADA PRINCIPAL
+    ====================================================== -->
+
+    <section class="chamada-v7">
+
+        <div class="container">
+
+            <h2>
+                ENCONTRE SUA <span>CAMISA</span>
+            </h2>
+
+            <p>
+                Explore nossa coleção de camisas de futebol e encontre
+                o modelo perfeito para representar seu time.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BENEFÍCIOS
+    ====================================================== -->
+
+    <section class="beneficios">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+                <div class="col-6 col-lg-3">
+
+                    <div class="beneficio">
+
+                        <div class="beneficio-icon">
+                            🛡️
+                        </div>
+
+                        <h5>
+                            Compra Segura
+                        </h5>
+
+                        <p>
+                            Tenha uma experiência de compra simples e segura.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-lg-3">
+
+                    <div class="beneficio">
+
+                        <div class="beneficio-icon">
+                            ⚽
+                        </div>
+
+                        <h5>
+                            Times do Mundo
+                        </h5>
+
+                        <p>
+                            Encontre camisas de diferentes clubes e seleções.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-lg-3">
+
+                    <div class="beneficio">
+
+                        <div class="beneficio-icon">
+                            ⭐
+                        </div>
+
+                        <h5>
+                            Qualidade
+                        </h5>
+
+                        <p>
+                            Produtos apresentados com informações e preços.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-lg-3">
+
+                    <div class="beneficio">
+
+                        <div class="beneficio-icon">
+                            🚚
+                        </div>
+
+                        <h5>
+                            Praticidade
+                        </h5>
+
+                        <p>
+                            Encontre seus produtos de forma rápida e fácil.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PRODUTOS
+    ====================================================== -->
+
+    <section class="produtos-section" id="produtos-section">
+
+        <div class="container">
+
+            <div class="titulo-section">
+
+                <h2>
+                    CAMISAS EM <span>DESTAQUE</span>
+                </h2>
+
+                <p>
+                    Confira os produtos disponíveis na V7IMPORTS.
+                </p>
+
+            </div>
+
+
+            <!-- FILTROS -->
+
+            <div class="filtros-v7">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-4">
+
+                        <label for="busca">
+                            Buscar camisa
+                        </label>
+
+                        <input
+                            class="form-control"
+                            id="busca"
+                            placeholder="Nome do time..."
+                            type="text"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label for="precoMin">
+                            Preço mínimo
+                        </label>
+
+                        <input
+                            class="form-control"
+                            id="precoMin"
+                            placeholder="R$ 0"
+                            type="number"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label for="precoMax">
+                            Preço máximo
+                        </label>
+
+                        <input
+                            class="form-control"
+                            id="precoMax"
+                            placeholder="R$ 999"
+                            type="number"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <button
+                            class="btn btn-filtrar w-100"
+                            onclick="aplicarFiltros()"
+                        >
+                            FILTRAR
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUTOS CARREGADOS PELO FIREBASE -->
+
+            <div
+                class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4"
+                id="produtos"
+            >
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CARRINHO
+    ====================================================== -->
+
+    <section class="carrinho-section">
+
+        <div class="container">
+
+            <div class="carrinho-box">
+
+                <h2 class="mb-4">
+                    🛒 MEU CARRINHO
+                </h2>
+
+                <ul
+                    class="list-group mb-4"
+                    id="carrinho"
+                >
+                </ul>
+
+                <button
+                    class="btn btn-finalizar"
+                    onclick="finalizarCompra()"
+                >
+                    FINALIZAR COMPRA
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MODO ESCURO
+    ====================================================== -->
+
+    <div
+        class="position-fixed bottom-0 end-0 m-3"
+        style="z-index: 1050;"
+    >
+
+        <div class="form-check form-switch bg-dark text-white px-3 py-2 rounded shadow">
+
+            <input
+                class="form-check-input"
+                id="modoEscuroToggle"
+                type="checkbox"
+                onchange="alternarModoEscuro()"
+            >
+
+            <label
+                class="form-check-label"
+                for="modoEscuroToggle"
+            >
+                Modo escuro
+            </label>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL LOGIN / CADASTRO
+    ====================================================== -->
+
+    <div
+        class="modal fade"
+        id="loginModal"
+        tabindex="-1"
+    >
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        ACESSO V7IMPORTS
+                    </h5>
+
+                    <button
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        type="button"
+                    >
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <h6 class="fw-bold mb-3">
+                        Entrar na sua conta
+                    </h6>
+
+                    <input
+                        class="form-control mb-2"
+                        id="email"
+                        placeholder="Seu e-mail"
+                        type="email"
+                    >
+
+                    <input
+                        class="form-control mb-3"
+                        id="senha"
+                        placeholder="Sua senha"
+                        type="password"
+                    >
+
+                    <button
+                        class="btn btn-login-modal w-100 mb-3"
+                        onclick="login()"
+                    >
+                        ENTRAR
+                    </button>
+
+
+                    <hr>
+
+
+                    <h6 class="fw-bold mb-3">
+                        Ainda não possui uma conta?
+                    </h6>
+
+                    <input
+                        class="form-control mb-2"
+                        id="emailCadastro"
+                        placeholder="Novo e-mail"
+                        type="email"
+                    >
+
+                    <input
+                        class="form-control mb-3"
+                        id="senhaCadastro"
+                        placeholder="Nova senha"
+                        type="password"
+                    >
+
+                    <button
+                        class="btn btn-cadastro-modal w-100"
+                        onclick="cadastrar()"
+                    >
+                        CRIAR CONTA
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RODAPÉ
+    ====================================================== -->
+
+    <footer class="footer-v7">
+
+        <div class="container text-center">
+
+            <div class="footer-logo">
+                V7<span>IMPORTS</span>
+            </div>
+
+            <p>
+                CAMISAS DE FUTEBOL
+            </p>
+
+            <p>
+                Todos os direitos reservados © 2026 V7IMPORTS
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- =====================================================
+         MODO ESCURO
+    ====================================================== -->
+
+    <script>
+
+        function alternarModoEscuro() {
+
+            document.body.classList.toggle(
+                "modo-escuro"
+            );
+
+            const ativado =
+                document.body.classList.contains("modo-escuro");
+
+            document
+                .getElementById("modoEscuroToggle")
+                .checked = ativado;
+
+        }
+
+    </script>
+
+
+    <!-- =====================================================
+         CARREGAMENTO DOS PRODUTOS
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                if (typeof carregarProdutos === "function") {
+                    carregarProdutos();
+                }
+
+            }
+        );
+
+    </script>
+
 </body>
-</html>
+
+</html> 

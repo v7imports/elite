@@ -1082,3 +1082,195 @@ function escaparHTML(texto) {
         .replace(/'/g, "&#039;");
 
 }
+
+// ================================================
+// CADASTRAR CATÁLOGO INICIAL - V7IMPORTS
+// ================================================
+
+// Gera uma imagem ilustrativa de camisa em SVG
+function gerarImagemCamisa(cor1, cor2) {
+    const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+        <rect width="600" height="600" fill="#f2f2f2"/>
+        <path d="M210 120 L270 85 L330 85 L390 120
+        L500 190 L445 290 L390 260 L390 510
+        L210 510 L210 260 L155 290 L100 190 Z"
+        fill="${cor1}" stroke="#222" stroke-width="8"/>
+        <path d="M270 85 Q300 145 330 85"
+        fill="none" stroke="${cor2}" stroke-width="18"/>
+        <path d="M210 260 L390 260" stroke="${cor2}" stroke-width="12"/>
+        <path d="M210 330 L390 330" stroke="${cor2}" stroke-width="8"/>
+        <text x="300" y="570" text-anchor="middle"
+        font-size="25" fill="#222" font-family="Arial">V7IMPORTS</text>
+    </svg>`;
+
+    return "data:image/svg+xml;charset=UTF-8," +
+        encodeURIComponent(svg);
+}
+
+
+// ================================================
+// FUNÇÃO PRINCIPAL DE CADASTRO
+// ================================================
+
+async function cadastrarCatalogoInicial() {
+
+    if (!usuarioAtual) {
+        alert("Você precisa estar logado como administrador.");
+        return;
+    }
+
+    const confirmar = confirm(
+        "Deseja cadastrar as 12 camisas na loja?"
+    );
+
+    if (!confirmar) return;
+
+    const produtos = [
+        {
+            id: "camisa_flamengo",
+            nome: "Camisa Flamengo",
+            preco: 149.90,
+            cor1: "#c90018",
+            cor2: "#111111"
+        },
+        {
+            id: "camisa_corinthians",
+            nome: "Camisa Corinthians",
+            preco: 149.90,
+            cor1: "#eeeeee",
+            cor2: "#111111"
+        },
+        {
+            id: "camisa_palmeiras",
+            nome: "Camisa Palmeiras",
+            preco: 149.90,
+            cor1: "#006437",
+            cor2: "#ffffff"
+        },
+        {
+            id: "camisa_sao_paulo",
+            nome: "Camisa São Paulo",
+            preco: 149.90,
+            cor1: "#ffffff",
+            cor2: "#d71920"
+        },
+        {
+            id: "camisa_santos",
+            nome: "Camisa Santos",
+            preco: 139.90,
+            cor1: "#ffffff",
+            cor2: "#111111"
+        },
+        {
+            id: "camisa_real_madrid",
+            nome: "Camisa Real Madrid",
+            preco: 179.90,
+            cor1: "#eeeeff",
+            cor2: "#d6b45b"
+        },
+        {
+            id: "camisa_barcelona",
+            nome: "Camisa Barcelona",
+            preco: 179.90,
+            cor1: "#17245b",
+            cor2: "#a90035"
+        },
+        {
+            id: "camisa_psg",
+            nome: "Camisa PSG",
+            preco: 169.90,
+            cor1: "#14234b",
+            cor2: "#e52b42"
+        },
+        {
+            id: "camisa_manchester_city",
+            nome: "Camisa Manchester City",
+            preco: 169.90,
+            cor1: "#75c9e8",
+            cor2: "#ffffff"
+        },
+        {
+            id: "camisa_liverpool",
+            nome: "Camisa Liverpool",
+            preco: 169.90,
+            cor1: "#c8102e",
+            cor2: "#ffffff"
+        },
+        {
+            id: "camisa_arsenal",
+            nome: "Camisa Arsenal",
+            preco: 169.90,
+            cor1: "#db142b",
+            cor2: "#ffffff"
+        },
+        {
+            id: "camisa_bayern",
+            nome: "Camisa Bayern de Munique",
+            preco: 169.90,
+            cor1: "#d71920",
+            cor2: "#ffffff"
+        }
+    ];
+
+    const botao = document.getElementById("btn-catalogo-inicial");
+
+    if (botao) botao.disabled = true;
+
+    let cadastrados = 0;
+    let existentes = 0;
+
+    try {
+
+        for (const produto of produtos) {
+
+            const referencia = db
+                .collection("produtos")
+                .doc(produto.id);
+
+            const documento = await referencia.get();
+
+            // Não duplica produtos já cadastrados
+            if (documento.exists) {
+                existentes++;
+                continue;
+            }
+
+            await referencia.set({
+                nome: produto.nome,
+                preco: produto.preco,
+                estoque: 10,
+                imagem: gerarImagemCamisa(
+                    produto.cor1,
+                    produto.cor2
+                ),
+                descricao: "Camisa de futebol disponível na V7Imports.",
+                criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            cadastrados++;
+        }
+
+        await carregarProdutos();
+
+        mostrarMensagem(
+            cadastrados + " produtos cadastrados! " +
+            existentes + " já existiam.",
+            "success"
+        );
+
+    } catch (erro) {
+
+        console.error("Erro no catálogo:", erro);
+
+        mostrarMensagem(
+            "Erro ao cadastrar produtos: " + obterMensagemErro(erro),
+            "danger"
+        );
+
+    } finally {
+
+        if (botao) botao.disabled = false;
+
+    }
+}
